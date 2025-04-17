@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  db:
+    image: mysql:9 # Can be any other database
+    container_name: your_db_container_name
+    ports:
+      - "3306:3306" # in this case, 3306 since its the default SQL port. Don't forget to update according to your db.
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD} # Don't forget to update the env variables based on your db
+      - MYSQL_DATABASE=${DB_NAME}
+    restart: unless-stopped
+    networks:
+      - back-tier
+    env_file: ./.env.dev
+
+networks:
+  back-tier:
+    driver: bridge
+
+# docker compose -f docker-compose.yaml --env-file <your_env> up -d
