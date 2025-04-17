@@ -27,17 +27,20 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('/docs', app, document, {useGlobalPrefix: true});
+  SwaggerModule.setup('/docs', app, document, { useGlobalPrefix: true });
 
-  await app.listen(app
-    .get(ConfigService)
-    .get('PORT', 3000),
+  await app.listen(
+    app.get(ConfigService).get('PORT', 3000),
 
-    () => console.log(
-      `Server is running on port ${app.get(ConfigService).get('PORT', 3000)}, \
-docs available at: http://localhost:${app.get(ConfigService).get('PORT', 3000)}/api/docs`)
-  
+    () =>
+      console.log(
+        `Server is running on port ${app.get(ConfigService).get('PORT', 3000)}, \
+docs available at: http://localhost:${app.get(ConfigService).get('PORT', 3000)}/api/docs`,
+      ),
   );
 }
 
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('Error starting the application:', err);
+  process.exit(1);
+});
