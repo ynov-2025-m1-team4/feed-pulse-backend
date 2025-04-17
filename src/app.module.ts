@@ -5,7 +5,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from './config/app.config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import databaseConfig from './config/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -21,7 +20,7 @@ import jwtConfig from './config/jwt.config';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        ...configService.get('database'),
+        ...(await configService.get('database')),
       }),
     }),
     // user can make 100 requests every 15 minutes.
@@ -33,7 +32,6 @@ import jwtConfig from './config/jwt.config';
         },
       ],
     }),
-    AuthModule,
     UsersModule,
   ],
 
@@ -43,7 +41,7 @@ import jwtConfig from './config/jwt.config';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
-    }
+    },
   ],
 })
 export class AppModule {}

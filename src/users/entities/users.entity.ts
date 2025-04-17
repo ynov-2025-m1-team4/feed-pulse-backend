@@ -1,12 +1,4 @@
-import {
-  IsBoolean,
-  IsDate,
-  IsEmail,
-  IsEnum,
-  IsOptional,
-  Matches,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, Matches, MinLength } from 'class-validator';
 
 import {
   Column,

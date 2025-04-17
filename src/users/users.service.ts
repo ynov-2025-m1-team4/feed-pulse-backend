@@ -14,21 +14,19 @@ export class UsersService {
   ) {}
 
   private async hashPassword(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt(10);
+    const salt: string = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
   }
-
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { password, ...rest } = createUserDto;
     const hashedPassword = await this.hashPassword(password);
-    
+
     const user = this.usersRepository.create({
       ...rest,
       password: hashedPassword,
     });
     return await this.usersRepository.save(user);
-
   }
 
   async findAll(): Promise<User[]> {
@@ -50,14 +48,14 @@ export class UsersService {
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
     const updateData = { ...updateUserDto };
-    
+
     if (updateData.password) {
       updateData.password = await this.hashPassword(updateData.password);
     }
-    
+
     Object.assign(user, updateData);
     return await this.usersRepository.save(user);
-    }
+  }
 
   async remove(id: number): Promise<void> {
     const user = await this.findOne(id);
