@@ -1,0 +1,29 @@
+name: NestJS CI
+
+on:
+  push:
+    branches: [staging]
+  pull_request:
+    branches: [staging]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🟢 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20' # or your version
+
+      - name: 📦 Install dependencies
+        run: npm install
+
+      - name: 🧹 Run ESLint
+        run: npm run lint
+
+    #   - name: 🧪 Run Tests
+    #     run: npm run test -- --ci --runInBand
