@@ -21,8 +21,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const options = new DocumentBuilder()
-    .setTitle('Your API title')
-    .setDescription('Your API description')
+    .setTitle('Feed pulse API')
+    .setDescription('Feed pulse API description')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

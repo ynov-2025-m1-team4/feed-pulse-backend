@@ -3,17 +3,16 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   HttpCode,
   HttpStatus,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { UpdateUserDto } from 'src/users/dto/update-user.dto';
-import { User } from 'src/users/entities/users.entity';
+import { User } from 'src/users/schemas/user.schema';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -32,42 +31,48 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: 200, description: 'Return all users', type: [User] })
-  findAll(): Promise<User[]> {
-    return this.usersService.findAll();
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  getProfile(@Request() req) {
+    return this.usersService.findByEmail(req.user.email);
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a user by id' })
-  @ApiResponse({ status: 200, description: 'Return the user', type: User })
-  @ApiResponse({ status: 404, description: 'User not found' })
-  findOne(@Param('id') id: number): Promise<User> {
-    return this.usersService.findOne(id);
-  }
+  // @Get()
+  // @ApiOperation({ summary: 'Get all users' })
+  // @ApiResponse({ status: 200, description: 'Return all users', type: [User] })
+  // findAll(): Promise<User[]> {
+  //   return this.usersService.findAll();
+  // }
 
-  @Patch(':id')
-  @ApiOperation({ summary: 'Update a user' })
-  @ApiResponse({
-    status: 200,
-    description: 'User successfully updated',
-    type: User,
-  })
-  @ApiResponse({ status: 404, description: 'User not found' })
-  update(
-    @Param('id') id: number,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Promise<User> {
-    return this.usersService.update(id, updateUserDto);
-  }
+  // @Get(':id')
+  // @ApiOperation({ summary: 'Get a user by id' })
+  // @ApiResponse({ status: 200, description: 'Return the user', type: User })
+  // @ApiResponse({ status: 404, description: 'User not found' })
+  // findOne(@Param('id') id: number): Promise<User> {
+  //   return this.usersService.findOne(id);
+  // }
 
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete a user' })
-  @ApiResponse({ status: 204, description: 'User successfully deleted' })
-  @ApiResponse({ status: 404, description: 'User not found' })
-  @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: number): Promise<void> {
-    return this.usersService.remove(id);
-  }
+  // @Patch(':id')
+  // @ApiOperation({ summary: 'Update a user' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'User successfully updated',
+  //   type: User,
+  // })
+  // @ApiResponse({ status: 404, description: 'User not found' })
+  // update(
+  //   @Param('id') id: number,
+  //   @Body() updateUserDto: UpdateUserDto,
+  // ): Promise<User> {
+  //   return this.usersService.update(id, updateUserDto);
+  // }
+
+  // @Delete(':id')
+  // @ApiOperation({ summary: 'Delete a user' })
+  // @ApiResponse({ status: 204, description: 'User successfully deleted' })
+  // @ApiResponse({ status: 404, description: 'User not found' })
+  // @HttpCode(HttpStatus.NO_CONTENT)
+  // remove(@Param('id') id: number): Promise<void> {
+  //   return this.usersService.remove(id);
+  // }
 }
