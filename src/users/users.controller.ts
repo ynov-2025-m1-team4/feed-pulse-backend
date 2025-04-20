@@ -34,7 +34,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req) {
-    return this.usersService.findByEmail(req.user.email);
+    return this.usersService.findByEmail(req.user.email as string);
   }
 
   // @Get()
