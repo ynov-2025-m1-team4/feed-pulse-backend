@@ -37,4 +37,8 @@ export class FeedbacksService {
     const res = await this.model.findByIdAndDelete(id);
     if (!res) throw new NotFoundException('Feedback not found');
   }
+
+  async exists(filter): Promise<boolean> {
+    return !!(await this.model.exists(filter));
+  }
 }

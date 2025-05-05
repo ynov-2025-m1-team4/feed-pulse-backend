@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from './schemas/user.schema';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
 @Injectable()
 export class UsersService {
   constructor(

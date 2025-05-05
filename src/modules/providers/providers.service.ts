@@ -13,6 +13,10 @@ export class ProvidersService {
     return await this.model.create({ userId: userId, ...dto });
   }
 
+  async findAll(): Promise<Provider[]> {
+    return await this.model.find().sort({ createdAt: -1 }).exec();
+  }
+
   async findAllByUser(userId: string): Promise<Provider[]> {
     return await this.model.find({ userId }).sort({ createdAt: -1 }).exec();
   }
@@ -38,7 +42,10 @@ export class ProvidersService {
     return await this.model.find().exec();
   }
 
-  async updateLastPolledAt(id: string, date: Date): Promise<void> {
-    await this.model.updateOne({ _id: id }, { $set: { lastPolledAt: date } });
+  async updateLastPolledAt(id: string): Promise<void> {
+    await this.model.updateOne(
+      { _id: id },
+      { $set: { lastPolledAt: new Date() } },
+    );
   }
 }

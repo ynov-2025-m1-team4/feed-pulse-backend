@@ -11,9 +11,15 @@ import jwtConfig from './modules/auth/config/jwt.config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProvidersModule } from './modules/providers/providers.module';
 import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
+import { PollingService } from './modules/polling/polling.service';
+import { ScheduleModule } from '@nestjs/schedule';
+import { PollingModule } from './modules/polling/polling.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
+    HttpModule,
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       envFilePath: [`.env.${process.env.NODE_ENV || 'development'}`],
       load: [appConfig, jwtConfig],
@@ -38,6 +44,7 @@ import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
     }),
     ProvidersModule,
     FeedbacksModule,
+    PollingModule,
   ],
 
   controllers: [AppController],
@@ -47,6 +54,7 @@ import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
+    PollingService,
   ],
 })
 export class AppModule {}
