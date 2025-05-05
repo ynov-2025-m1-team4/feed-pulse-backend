@@ -3,12 +3,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from 'src/users/schemas/user.schema';
-import { Model, Types } from 'mongoose';
+import { User } from '../users/schemas/user.schema';
+import { Model } from 'mongoose';
 import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
@@ -35,11 +35,13 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    return this.generateToken(user._id);
+    return this.generateToken(user._id.toString(), email);
   }
 
-  generateToken(userId: Types.ObjectId) {
-    const accessToken = this.jwtService.sign({ userId });
+  generateToken(userId: string, email: string) {
+    const payload = { id: userId, email: email };
+
+    const accessToken = this.jwtService.sign(payload);
     return { accessToken };
   }
 

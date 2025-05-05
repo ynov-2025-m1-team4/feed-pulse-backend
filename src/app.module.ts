@@ -5,13 +5,21 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from './config/app.config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import jwtConfig from './config/jwt.config';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import jwtConfig from './modules/auth/config/jwt.config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ProvidersModule } from './modules/providers/providers.module';
+import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
+import { PollingService } from './modules/polling/polling.service';
+import { ScheduleModule } from '@nestjs/schedule';
+import { PollingModule } from './modules/polling/polling.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
+    HttpModule,
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       envFilePath: [`.env.${process.env.NODE_ENV || 'development'}`],
       load: [appConfig, jwtConfig],
@@ -34,6 +42,9 @@ import { MongooseModule } from '@nestjs/mongoose';
       }),
       inject: [ConfigService],
     }),
+    ProvidersModule,
+    FeedbacksModule,
+    PollingModule,
   ],
 
   controllers: [AppController],
@@ -43,6 +54,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
+    PollingService,
   ],
 })
 export class AppModule {}
