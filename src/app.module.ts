@@ -15,6 +15,7 @@ import { PollingService } from './modules/polling/polling.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PollingModule } from './modules/polling/polling.module';
 import { HttpModule } from '@nestjs/axios';
+import { MetricsModule } from './modules/metrics/metrics.module';
 
 @Module({
   imports: [
@@ -45,6 +46,8 @@ import { HttpModule } from '@nestjs/axios';
     ProvidersModule,
     FeedbacksModule,
     PollingModule,
+    FeedbacksModule,
+    MetricsModule,
   ],
 
   controllers: [AppController],
