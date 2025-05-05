@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Provider } from './schemas/provider.schema';
 import { Model } from 'mongoose';
@@ -10,7 +10,6 @@ export class ProvidersService {
   constructor(@InjectModel(Provider.name) private model: Model<Provider>) {}
 
   async create(dto: CreateProviderDto, userId: string): Promise<Provider> {
-    Logger.log('Creating provider', { userId: userId, ...dto });
     return await this.model.create({ userId: userId, ...dto });
   }
 

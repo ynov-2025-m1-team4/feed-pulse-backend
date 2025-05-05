@@ -8,7 +8,6 @@ import {
   Delete,
   UseGuards,
   Request,
-  Logger,
 } from '@nestjs/common';
 import { ProvidersService } from './providers.service';
 import { CreateProviderDto } from './dto/create-provider.dto';
@@ -22,14 +21,13 @@ export class ProvidersController {
   @Post()
   @UseGuards(AuthGuard('jwt'))
   create(@Request() req, @Body() dto: CreateProviderDto) {
-    Logger.log('userId', req.userId);
-    return this.service.create(dto, req.userId as string);
+    return this.service.create(dto, req.user.userId as string);
   }
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
   findAllByUser(@Request() req) {
-    return this.service.findAllByUser(req.userId as string);
+    return this.service.findAllByUser(req.user.userId as string);
   }
 
   @Get(':id')
