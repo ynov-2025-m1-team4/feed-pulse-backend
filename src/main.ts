@@ -24,7 +24,17 @@ async function bootstrap() {
     .setTitle('Feed pulse API')
     .setDescription('Feed pulse API description')
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'Bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'access-token'
+    )
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/docs', app, document, { useGlobalPrefix: true });
