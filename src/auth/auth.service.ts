@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
@@ -12,6 +13,7 @@ import { Model, Types } from 'mongoose';
 import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
+import { IsEmail } from 'class-validator';
 
 @Injectable()
 export class AuthService {
@@ -35,11 +37,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    Logger.log('User logged in', { email: email, userId: user._id });
     return this.generateToken(user._id);
   }
 
   generateToken(userId: Types.ObjectId) {
-    const accessToken = this.jwtService.sign({ userId });
+    const accessToken = this.jwtService.sign({ id: userId });
     return { accessToken };
   }
 

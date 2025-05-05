@@ -1,4 +1,4 @@
-import { Types } from 'mysql2';
+import { Types } from 'mongoose';
 
 export type AuthJwtPayload = {
   id: Types.ObjectId;
