@@ -1,12 +1,11 @@
-import { Controller, Get, Query, BadRequestException, Param } from '@nestjs/common';
+import { Controller, Get, BadRequestException, Param } from '@nestjs/common';
 import { MetricsService } from './metrics.service';
-import { MetricsQueryDto } from './dto/metrics-query.dto';
 
 @Controller('metrics')
 export class MetricsController {
   constructor(private readonly metricsService: MetricsService) {}
 
-  @Get(":metric")
+  @Get(':metric')
   async getMetrics(@Param('metric') metric: string) {
     switch (metric) {
       case 'channels':

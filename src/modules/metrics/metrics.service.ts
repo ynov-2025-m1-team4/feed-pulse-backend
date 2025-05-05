@@ -7,9 +7,7 @@ import { FeedbacksService } from '../feedbacks/feedbacks.service';
 
 @Injectable()
 export class MetricsService {
-  constructor(
-    private feedbackService: FeedbacksService
-  )  {}
+  constructor(private feedbackService: FeedbacksService) {}
 
   async getChannelMetrics(): Promise<ChannelMetric[]> {
     return await this.feedbackService.getChannelMetrics();

@@ -1,3 +1,3 @@
 export interface DailyRateMetric {
-    rate: number;
+  rate: number;
 }

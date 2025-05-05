@@ -1,4 +1,4 @@
 export interface ChannelMetric {
-    channel: string;
-    feedbacks_count: number;
+  channel: string;
+  feedbacks_count: number;
 }

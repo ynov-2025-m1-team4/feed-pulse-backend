@@ -4,12 +4,9 @@ import { MetricsController } from './metrics.controller';
 import { FeedbacksModule } from '../feedbacks/feedbacks.module';
 
 @Module({
-  imports: [
-    FeedbacksModule,
-  ],
+  imports: [FeedbacksModule],
   controllers: [MetricsController],
   providers: [MetricsService],
   exports: [MetricsService],
 })
-export class MetricsModule {
-}
+export class MetricsModule {}
