@@ -20,7 +20,7 @@ export class MetricsService {
   }
 
   async getDailyRateMetric(): Promise<DailyRateMetric> {
-      return await this.feedbackService.getDailyRateMetric();
+    return await this.feedbackService.getDailyRateMetric();
   }
 
   async getSentimentMetrics(): Promise<SentimentMetric> {

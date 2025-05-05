@@ -1,4 +1,4 @@
-import { Controller, Get, Query, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Query, BadRequestException, Param } from '@nestjs/common';
 import { MetricsService } from './metrics.service';
 import { MetricsQueryDto } from './dto/metrics-query.dto';
 
@@ -6,9 +6,9 @@ import { MetricsQueryDto } from './dto/metrics-query.dto';
 export class MetricsController {
   constructor(private readonly metricsService: MetricsService) {}
 
-  @Get()
-  async getMetrics(@Query() query: MetricsQueryDto) {
-    switch (query.metric_value) {
+  @Get(":metric")
+  async getMetrics(@Param('metric') metric: string) {
+    switch (metric) {
       case 'channels':
         return this.metricsService.getChannelMetrics();
       case 'themes':
@@ -19,7 +19,7 @@ export class MetricsController {
         return this.metricsService.getSentimentMetrics();
       default:
         throw new BadRequestException(
-          'metric_value must be one of: channels, themes, daily-rate, sentiments',
+          'metric value must be one of: channels, themes, daily-rate, sentiments',
         );
     }
   }
