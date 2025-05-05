@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Feedback } from './schemas/feedback.schema';
 import { Model } from 'mongoose';
@@ -8,13 +8,23 @@ import { ChannelMetric } from '../metrics/interfaces/channel-metric.interface';
 import { ThemeMetric } from '../metrics/interfaces/theme-metric.interface';
 import { DailyRateMetric } from '../metrics/interfaces/daily-rate.interface';
 import { SentimentMetric } from '../metrics/interfaces/sentiment-metric.interface';
+import { AIService } from '../ai/ai.service';
 
 @Injectable()
 export class FeedbacksService {
-  constructor(@InjectModel(Feedback.name) private model: Model<Feedback>) {}
+  constructor(
+    @InjectModel(Feedback.name) private model: Model<Feedback>,
+    private aiService: AIService,
+  ) {}
 
   async create(dto: CreateFeedbackDto): Promise<Feedback> {
-    return this.model.create(dto);
+    const analysis = await this.aiService.analyzeFeedback(dto.text);
+
+    Logger.log('AI analysis result:', analysis);
+    dto.sentimentScore = analysis.sentiment;
+    dto.themes = analysis.themes;
+
+    return await this.model.create(dto);
   }
 
   async findAllByUser(userId: string): Promise<Feedback[]> {

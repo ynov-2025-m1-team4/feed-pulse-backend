@@ -17,7 +17,7 @@ export class PollingService {
     private readonly http: HttpService,
   ) {}
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_30_SECONDS, { name: 'pollingFeedbacks' })
   async pollAllProviders() {
     this.logger.log('Polling all providers...');
     const providers: Provider[] = await this.providersService.findAll();
@@ -27,30 +27,29 @@ export class PollingService {
         const from =
           provider.lastPolledAt?.toISOString() || new Date(0).toISOString();
         const urlWithFrom = `${provider.url}?from=${encodeURIComponent(from)}`;
+        this.logger.log('from', from);
 
         const { data } = await firstValueFrom(this.http.get(urlWithFrom));
         if (!Array.isArray(data)) continue;
 
+        Logger.log('data', data);
         for (const raw of data) {
-          const exists = await this.feedbacksService.exists({
-            userId: provider.userId,
-            providerId: provider.id,
-            text: raw.text,
-            date: new Date(raw.date),
-          });
+          //   const exists = await this.feedbacksService.exists({
+          //     userId: provider.userId,
+          //     providerId: provider.id,
+          //     text: raw.text,
+          //     date: new Date(raw.date),
+          //   });
 
-          if (!exists) {
-            const dto: CreateFeedbackDto = {
-              userId: provider.userId.toString(),
-              providerId: provider.id,
-              date: new Date(raw.date),
-              channel: raw.channel,
-              text: raw.text,
-              sentimentScore: 1, // TODO: Add sentiment analysis
-              themes: ['test'],
-            };
-            await this.feedbacksService.create(dto);
-          }
+          //   if (!exists) {
+          const dto: CreateFeedbackDto = {
+            userId: provider.userId.toString(),
+            providerId: provider.id,
+            date: new Date(raw.date),
+            channel: raw.channel,
+            text: raw.text,
+          };
+          await this.feedbacksService.create(dto);
         }
 
         await this.providersService.updateLastPolledAt(provider.id);

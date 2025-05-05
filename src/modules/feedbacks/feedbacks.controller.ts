@@ -1,28 +1,23 @@
 import {
   Controller,
-  Post,
   Get,
-  Body,
   Param,
-  Patch,
   Delete,
   UseGuards,
   Request,
 } from '@nestjs/common';
 import { FeedbacksService } from './feedbacks.service';
-import { CreateFeedbackDto } from './dto/create-feedback.dto';
-import { UpdateFeedbackDto } from './dto/update-feedback.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('feedbacks')
 export class FeedbacksController {
   constructor(private readonly service: FeedbacksService) {}
 
-  @Post()
-  @UseGuards(AuthGuard('jwt'))
-  create(@Body() dto: CreateFeedbackDto) {
-    return this.service.create(dto);
-  }
+  // @Post()
+  // @UseGuards(AuthGuard('jwt'))
+  // create(@Body() dto: CreateFeedbackDto) {
+  //   return this.service.create(dto);
+  // }
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
@@ -42,11 +37,11 @@ export class FeedbacksController {
     return this.service.findOne(id);
   }
 
-  @Patch(':id')
-  @UseGuards(AuthGuard('jwt'))
-  update(@Param('id') id: string, @Body() dto: UpdateFeedbackDto) {
-    return this.service.update(id, dto);
-  }
+  // @Patch(':id')
+  // @UseGuards(AuthGuard('jwt'))
+  // update(@Param('id') id: string, @Body() dto: UpdateFeedbackDto) {
+  //   return this.service.update(id, dto);
+  // }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
