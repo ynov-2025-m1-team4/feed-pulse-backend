@@ -9,6 +9,9 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import jwtConfig from './config/jwt.config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { FeedbacksModule } from './feedbacks/feedbacks.module';
+import { MetricsModule } from './metrics/metrics.module';
+import { FeedbacksModule } from './feedbacks/feedbacks.module';
 
 @Module({
   imports: [
@@ -34,6 +37,8 @@ import { MongooseModule } from '@nestjs/mongoose';
       }),
       inject: [ConfigService],
     }),
+    FeedbacksModule,
+    MetricsModule,
   ],
 
   controllers: [AppController],
