@@ -5,23 +5,26 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from './config/app.config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { UsersModule } from './users/users.module';
-import databaseConfig from './config/database.config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import jwtConfig from './config/jwt.config';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import jwtConfig from './modules/auth/config/jwt.config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ProvidersModule } from './modules/providers/providers.module';
+import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
+import { PollingService } from './modules/polling/polling.service';
+import { ScheduleModule } from '@nestjs/schedule';
+import { PollingModule } from './modules/polling/polling.module';
+import { HttpModule } from '@nestjs/axios';
+import { MetricsModule } from './modules/metrics/metrics.module';
 
 @Module({
   imports: [
+    HttpModule,
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
-      envFilePath: [`.env.${process.env.NODE_ENV || 'example'}`],
-      load: [appConfig, databaseConfig, jwtConfig],
-    }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        ...(await configService.get('database')),
-      }),
+      envFilePath: [`.env.${process.env.NODE_ENV || 'development'}`],
+      load: [appConfig, jwtConfig],
+      isGlobal: true,
     }),
     // user can make 100 requests every 15 minutes.
     ThrottlerModule.forRoot({
@@ -33,6 +36,18 @@ import jwtConfig from './config/jwt.config';
       ],
     }),
     UsersModule,
+    AuthModule,
+    MongooseModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('DATABASE_URI'),
+      }),
+      inject: [ConfigService],
+    }),
+    ProvidersModule,
+    FeedbacksModule,
+    PollingModule,
+    FeedbacksModule,
+    MetricsModule,
   ],
 
   controllers: [AppController],
@@ -42,6 +57,7 @@ import jwtConfig from './config/jwt.config';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
+    PollingService,
   ],
 })
 export class AppModule {}
