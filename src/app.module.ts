@@ -16,6 +16,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { PollingModule } from './modules/polling/polling.module';
 import { HttpModule } from '@nestjs/axios';
 import { MetricsModule } from './modules/metrics/metrics.module';
+import { AIModule } from './modules/ai/ai.module';
+import aiConfig from './config/ai.config';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { MetricsModule } from './modules/metrics/metrics.module';
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       envFilePath: [`.env.${process.env.NODE_ENV || 'development'}`],
-      load: [appConfig, jwtConfig],
+      load: [appConfig, jwtConfig, aiConfig],
       isGlobal: true,
     }),
     // user can make 100 requests every 15 minutes.
@@ -48,6 +50,7 @@ import { MetricsModule } from './modules/metrics/metrics.module';
     PollingModule,
     FeedbacksModule,
     MetricsModule,
+    AIModule,
   ],
 
   controllers: [AppController],
