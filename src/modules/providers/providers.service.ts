@@ -33,4 +33,12 @@ export class ProvidersService {
     const result = await this.model.findByIdAndDelete(id);
     if (!result) throw new NotFoundException('Provider not found');
   }
+
+  async getActiveProviders(): Promise<Provider[]> {
+    return await this.model.find().exec();
+  }
+
+  async updateLastPolledAt(id: string, date: Date): Promise<void> {
+    await this.model.updateOne({ _id: id }, { $set: { lastPolledAt: date } });
+  }
 }

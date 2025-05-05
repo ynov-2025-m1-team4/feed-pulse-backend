@@ -5,11 +5,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from './config/app.config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import jwtConfig from './auth/config/jwt.config';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import jwtConfig from './modules/auth/config/jwt.config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ProvidersModule } from './providers/providers.module';
+import { ProvidersModule } from './modules/providers/providers.module';
 
 @Module({
   imports: [
