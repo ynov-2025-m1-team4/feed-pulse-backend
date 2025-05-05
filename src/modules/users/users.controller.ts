@@ -8,7 +8,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './schemas/user.schema';
@@ -31,10 +31,11 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('me')
-  getProfile(@Request() req) {
-    return this.usersService.findByEmail(req.user.email as string);
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('access-token')
+  async getProfile(@Request() req) {
+    return await this.usersService.findByEmail(req.user.email as string);
   }
 
   // @Get()
