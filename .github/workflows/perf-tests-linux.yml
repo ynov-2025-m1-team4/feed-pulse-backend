@@ -5,6 +5,7 @@ on:
     inputs:
       testFile:
         type: string
+        required: true
 
 jobs:
   check-performance:
