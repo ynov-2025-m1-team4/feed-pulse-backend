@@ -62,42 +62,179 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Deployment
+# 📊 FeedPulse
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+FeedPulse est une plateforme de centralisation et d’analyse en temps réel des retours clients provenant de différentes sources (emails, formulaires, réseaux sociaux, Google Reviews, etc.). Elle permet aux entreprises d’identifier rapidement les sentiments exprimés, les thématiques abordées et les canaux les plus utilisés, tout en déclenchant des alertes sur des points critiques.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+🔗 Démo : https://feedpulse.netlify.app  
+🔗 API Backend : https://feed-pulse-backend.onrender.com  
+🔗 API Producer : https://feedback-producer.onrender.com/feedbacks  
+📚 Swagger Backend : https://feed-pulse-backend.onrender.com/api/docs  
+📚 Swagger Producer : https://feedback-producer.onrender.com/api  
+
+---
+
+## 🚀 Fonctionnalités
+
+- Authentification sécurisée (JWT)
+- Connexion de flux de feedback externes via URL
+- Polling automatique
+- Analyse de sentiment (score entre -1 et 1)
+- Extraction des thèmes évoqués
+- Dashboard utilisateur avec visualisation des métriques
+
+---
+
+## 🧱 Stack technique
+
+- Backend : NestJS
+- Base de données : MongoDB
+- Frontend : Next.js
+- Déploiement : Render (API) + Netlify (Frontend)
+- IA : DeepSeek API pour sentiment analysis et extraction de thèmes
+
+---
+
+## 🗃️ Structure de la base de données
+
+```json
+// Users
+{
+  _id: ObjectId,
+  email: string,
+  password: string,
+  createdAt: Date
+}
+
+// Providers
+{
+  _id: ObjectId,
+  userId: ObjectId,
+  name: string, // ex: "Twitter API"
+  url: string,
+  createdAt: Date,
+  lastPolledAt: Date
+}
+
+// Feedbacks
+{
+  _id: ObjectId,
+  providerId: ObjectId,
+  userId: ObjectId,
+  date: Date,
+  channel: string, // ex: "twitter"
+  text: string,
+  sentimentScore: number, // entre -1 et 1
+  themes: [string]
+}
+````
+
+---
+
+## 📡 API REST
+
+### 🔐 Auth
+
+* `POST /auth/register` : crée un utilisateur
+* `POST /auth/login` : génère un JWT
+
+### 🔌 Providers
+
+* `POST /providers` : { name, url } → ajoute un provider
+* `GET /providers` : liste les flux connectés
+* `DELETE /providers/:id` : supprime un provider
+
+### 💬 Feedbacks
+
+* `GET /feedbacks` : tous les feedbacks (filtrable par provider, date, canal)
+* `GET /feedbacks/:id` : détail d’un feedback
+
+### 📊 Metrics
+
+* `GET /metrics/channels`
+* `GET /metrics/themes`
+* `GET /metrics/dailyRate`
+* `GET /metrics/sentiments`
+
+---
+
+## 🔁 Polling – fonctionnement
+
+1. L’utilisateur enregistre un provider avec une URL.
+2. Le système appelle périodiquement cette URL (ex. toutes les 60 secondes).
+3. Le provider retourne des feedbacks bruts :
+
+   ```json
+   {
+     "id": "fb_001",
+     "date": "2025-04-14T10:30:00Z",
+     "channel": "twitter",
+     "text": "Le support client est lent mais sympathique."
+   }
+   ```
+4. Un appel est fait à l’API DeepSeek :
+
+   ```json
+   {
+     "sentiment": 0.2,
+     "themes": ["support client", "temps de réponse"]
+   }
+   ```
+5. Le feedback enrichi est enregistré dans la base.
+
+---
+
+## ⚙️ Lancement local
+
+Prérequis : Node.js, MongoDB (local ou Atlas)
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+git clone https://github.com/ynov-2025-m1-team4/feedpulse-backend.git
+cd feedpulse-backend
+npm install
+
+cp .env.example .env
+# Modifier les variables : Mongo URI, JWT, API Key...
+
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 📁 .env.example
 
-Check out a few resources that may come in handy when working with NestJS:
+```env
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/feedpulse
+JWT_SECRET=your_secret_key
+AI_API_KEY=your_deepseek_api_key
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+## 📂 Arborescence backend
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+src/
+├── auth/
+├── feedbacks/
+├── providers/
+├── metrics/
+├── polling/
+├── users/
+├── app.module.ts
+└── main.ts
+```
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## ✍️ Auteur
 
-## License
+* Projet réalisé dans le cadre d’un MVP
+* Stack : NestJS, MongoDB, Render, Netlify, DeepSeek
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+## 📄 Licence
+
+MIT © 2025
