@@ -22,6 +22,11 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
+      - name: Inspect workspace
+        run: |
+          ls
+          cat ${{ github.workspace }}
+
       - name: Run perf tests
         uses: ./.github/workflows/perf-tests-linux.yml 
         with:
