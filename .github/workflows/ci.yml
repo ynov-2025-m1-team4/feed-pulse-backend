@@ -21,8 +21,5 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-  perf-tests:
-    needs: build-and-test
-    uses: ./.github/workflows/perf-tests-linux.yml 
-    with:
-      testFile: ./test/performance/feedbacks.test.js
+      - name: Perf tests
+        run: npm run test:perf
