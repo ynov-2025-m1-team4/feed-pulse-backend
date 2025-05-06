@@ -9,7 +9,6 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
@@ -24,8 +23,8 @@ jobs:
 
       - name: Inspect workspace
         run: |
-          ls -a
-          cat ${{ github.workspace }}/.github/workflows
+          ls ./.github/workflows/
+          cat ${{ github.workspace }}/.github/workflows/perf-tests-linux.yml
 
       - name: Run perf tests
         uses: ./.github/workflows/perf-tests-linux.yml 
