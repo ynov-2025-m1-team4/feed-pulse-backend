@@ -24,8 +24,8 @@ jobs:
 
       - name: Inspect workspace
         run: |
-          ls
-          cat ${{ github.workspace }}
+          ls -a
+          cat ${{ github.workspace }}/.github/workflows
 
       - name: Run perf tests
         uses: ./.github/workflows/perf-tests-linux.yml 
