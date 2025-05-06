@@ -19,11 +19,13 @@ jobs:
         with:
           node-version: '20' # or your version
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: npm install
 
-      - name: 🧹 Run ESLint
+      - name: Run ESLint
         run: npm run lint
 
-    #   - name: 🧪 Run Tests
-    #     run: npm run test -- --ci --runInBand
+      - name: Run perf tests
+        uses: ./.github/workflows/perf-tests-linux.yml 
+        with:
+          testDirectory: ./test/performance/feedbacks.test.js

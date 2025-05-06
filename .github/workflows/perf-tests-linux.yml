@@ -1,0 +1,19 @@
+name: Stress Test with Grafana K6
+
+on:
+  workflow_call:
+    inputs:
+      testFile:
+        type: string
+
+jobs:
+  check-performance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: grafana/setup-k6-action@v1
+
+      - name: Run performance test
+        uses: grafana/run-k6-action@v1
+        with:
+          path: ${{ inputs.testFile }}
