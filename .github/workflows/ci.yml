@@ -23,6 +23,7 @@ jobs:
         run: npm run lint
 
       - name: Run perf tests
-        uses: ./.github/workflows/perf-tests-linux.yml 
+        if: github.ref == 'refs/heads/staging'
+        uses: ./.github/workflows/perf-tests-linux.yml
         with:
           testDirectory: ./test/performance/feedbacks.test.js
