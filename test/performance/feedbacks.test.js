@@ -39,7 +39,7 @@ export const options = {
 const BASE_URL = 'https://feed-pulse-backend.onrender.com/api';
 const TEST_USER = {
   email: 'test-user@gmail.com',
-  password: 'passwd1234'
+  password: 'Password123!'
 };
 
 function getAuthToken() {

@@ -36,8 +36,8 @@ import aiConfig from './config/ai.config';
     ThrottlerModule.forRoot({
       throttlers: [
         {
-          ttl: 15 * 60,
-          limit: 100,
+          ttl: 5 * 60,
+          limit: 200,
         },
       ],
     }),
