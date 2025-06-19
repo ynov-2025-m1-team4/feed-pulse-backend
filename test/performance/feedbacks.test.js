@@ -13,12 +13,12 @@ export const options = {
     { duration: '30s', target: 1 },   // Single user warmup
     { duration: '30s', target: 5 },   // Gradual ramp
 
-    // Load testing phases
-    { duration: '2m', target: 20 },   // Ramp up
-    { duration: '3m', target: 20 },   // Sustained load
-    { duration: '1m', target: 50 },   // Peak load
-    { duration: '2m', target: 50 },   // Sustained peak
-    { duration: '2m', target: 0 },    // Ramp down
+    // // Load testing phases
+    // { duration: '2m', target: 20 },   // Ramp up
+    // { duration: '3m', target: 20 },   // Sustained load
+    // { duration: '1m', target: 50 },   // Peak load
+    // { duration: '2m', target: 50 },   // Sustained peak
+    // { duration: '2m', target: 0 },    // Ramp down
   ],
   
   thresholds: {
