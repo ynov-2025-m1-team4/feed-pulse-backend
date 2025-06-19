@@ -34,14 +34,6 @@ export class PollingService {
 
         Logger.log('data', data);
         for (const raw of data) {
-          //   const exists = await this.feedbacksService.exists({
-          //     userId: provider.userId,
-          //     providerId: provider.id,
-          //     text: raw.text,
-          //     date: new Date(raw.date),
-          //   });
-
-          //   if (!exists) {
           const dto: CreateFeedbackDto = {
             userId: provider.userId.toString(),
             providerId: provider.id,
