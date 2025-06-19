@@ -2,8 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Provider } from './schemas/provider.schema';
 import { Model } from 'mongoose';
-import { CreateProviderDto } from './dto/create-provider.dto';
-import { UpdateProviderDto } from './dto/update-provider.dto';
+import { CreateProviderDto, UpdateProviderDto } from './dto/provider.dto';
 
 @Injectable()
 export class ProvidersService {
