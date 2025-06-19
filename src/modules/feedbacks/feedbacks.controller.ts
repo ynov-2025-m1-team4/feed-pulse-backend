@@ -23,6 +23,7 @@ import { FeedbackResponseDto, UpdateFeedbackDto } from './dto/feedbacks.dto';
 @ApiTags('Feedbacks')
 @ApiBearerAuth('accessToken')
 @Controller('feedbacks')
+@UseGuards(AuthGuard('jwt'))
 export class FeedbacksController {
   constructor(private readonly feedbacksService: FeedbacksService) {}
 
@@ -32,7 +33,6 @@ export class FeedbacksController {
     description: 'List of feedbacks by user',
     type: [FeedbackResponseDto],
   })
-  @UseGuards(AuthGuard('jwt'))
   async findAllByUser(@Request() req) {
     return this.feedbacksService.findAllByUser(String(req.user.userId));
   }
@@ -56,7 +56,6 @@ export class FeedbacksController {
     description: 'Feedback found',
     type: FeedbackResponseDto,
   })
-  @UseGuards(AuthGuard('jwt'))
   async findOne(@Param('id') id: string) {
     return this.feedbacksService.findOne(id);
   }
@@ -78,7 +77,6 @@ export class FeedbacksController {
   @ApiOperation({ summary: 'Delete a feedback by ID' })
   @ApiParam({ name: 'id', description: 'ID of the feedback' })
   @ApiOkResponse({ description: 'Feedback deleted' })
-  @UseGuards(AuthGuard('jwt'))
   async remove(@Param('id') id: string) {
     return this.feedbacksService.remove(id);
   }
