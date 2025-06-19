@@ -9,7 +9,7 @@ import { compare } from 'bcrypt';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../users/schemas/user.schema';
 import { Model } from 'mongoose';
-import { RegisterDto } from './dto/register.dto';
+import { RegisterDto, RegisterResponseDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 
@@ -25,7 +25,6 @@ export class AuthService {
     const { email, password } = loginData;
     const user = await this.usersService.findByEmail(email);
 
-    // TODO: obfuscate error message to prevent user enumeration
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -45,7 +44,7 @@ export class AuthService {
     return { accessToken };
   }
 
-  async signUp(registrationData: RegisterDto) {
+  async signUp(registrationData: RegisterDto): Promise<RegisterResponseDto> {
     const { email, password, pseudo } = registrationData;
     const emailInUse = await this.userModel.findOne({
       email: registrationData.email,
@@ -56,10 +55,21 @@ export class AuthService {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await this.userModel.create({
+    const user = await this.userModel.create({
       pseudo,
       email,
       password: hashedPassword,
     });
+
+    const accessToken = this.generateToken(
+      user._id.toString(),
+      email,
+    ).accessToken;
+
+    return {
+      email,
+      pseudo,
+      accessToken,
+    };
   }
 }

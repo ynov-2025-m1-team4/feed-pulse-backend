@@ -23,3 +23,11 @@ export class LoginDto {
   @IsNotEmpty()
   readonly password: string;
 }
+
+export class LoginResponseDto {
+  @ApiProperty({
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+    description: "user's access token",
+  })
+  accessToken: string;
+}
