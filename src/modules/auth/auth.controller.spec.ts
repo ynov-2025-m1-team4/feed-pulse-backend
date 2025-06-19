@@ -18,10 +18,10 @@ describe('AuthController', () => {
         UsersService,
         {
           provide: getModelToken(User.name),
-          useValue: UsersModule
+          useValue: UsersModule,
         },
-        JwtService
-      ]
+        JwtService,
+      ],
     }).compile();
     controller = module.get<AuthController>(AuthController);
   });

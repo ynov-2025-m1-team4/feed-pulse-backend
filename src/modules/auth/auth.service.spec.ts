@@ -16,9 +16,9 @@ describe('AuthService', () => {
         UsersService,
         {
           provide: getModelToken(User.name),
-          useValue: UsersModule
+          useValue: UsersModule,
         },
-        JwtService
+        JwtService,
       ],
     }).compile();
 

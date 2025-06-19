@@ -16,9 +16,9 @@ describe('ProviderController', () => {
         ProvidersService,
         {
           provide: getModelToken(Provider.name),
-          useValue: ProvidersModule
+          useValue: ProvidersModule,
         },
-      ]
+      ],
     }).compile();
 
     controller = module.get<ProvidersController>(ProvidersController);

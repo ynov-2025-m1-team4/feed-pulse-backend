@@ -14,8 +14,8 @@ describe('ProviderService', () => {
         ProvidersService,
         {
           provide: getModelToken(Provider.name),
-          useValue: ProvidersModule
-        }
+          useValue: ProvidersModule,
+        },
       ],
     }).compile();
 

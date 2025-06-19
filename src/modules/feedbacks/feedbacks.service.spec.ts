@@ -14,7 +14,7 @@ describe('FeedbacksService', () => {
         FeedbacksService,
         {
           provide: getModelToken(Feedback.name),
-          useValue: FeedbacksModule
+          useValue: FeedbacksModule,
         },
         AIService,
       ],

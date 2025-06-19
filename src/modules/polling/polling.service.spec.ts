@@ -21,14 +21,14 @@ describe('PollingService', () => {
         ProvidersService,
         {
           provide: getModelToken(Provider.name),
-          useValue: ProvidersModule
+          useValue: ProvidersModule,
         },
         FeedbacksService,
         {
           provide: getModelToken(Feedback.name),
-          useValue: FeedbacksModule
+          useValue: FeedbacksModule,
         },
-        AIService
+        AIService,
       ],
     }).compile();
 

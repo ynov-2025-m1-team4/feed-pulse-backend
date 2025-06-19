@@ -12,10 +12,11 @@ describe('FeedbacksController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [FeedbacksController],
-      providers: [FeedbacksService,
+      providers: [
+        FeedbacksService,
         {
           provide: getModelToken(Feedback.name),
-          useValue: FeedbacksModule
+          useValue: FeedbacksModule,
         },
         AIService,
       ],

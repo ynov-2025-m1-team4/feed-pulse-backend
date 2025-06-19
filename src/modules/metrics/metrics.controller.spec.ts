@@ -13,13 +13,15 @@ describe('MetricsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MetricsController],
-      providers: [MetricsService, FeedbacksService,
+      providers: [
+        MetricsService,
+        FeedbacksService,
         {
           provide: getModelToken(Feedback.name),
-          useValue: FeedbacksModule
+          useValue: FeedbacksModule,
         },
-        AIService
-      ]
+        AIService,
+      ],
     }).compile();
 
     controller = module.get<MetricsController>(MetricsController);

@@ -11,13 +11,14 @@ describe('MetricsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MetricsService,
+      providers: [
+        MetricsService,
         FeedbacksService,
         {
           provide: getModelToken(Feedback.name),
-          useValue: FeedbacksModule
+          useValue: FeedbacksModule,
         },
-        AIService
+        AIService,
       ],
     }).compile();
 

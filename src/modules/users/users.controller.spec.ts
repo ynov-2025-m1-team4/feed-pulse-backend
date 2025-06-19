@@ -11,12 +11,13 @@ describe('UsersController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [UsersService,
+      providers: [
+        UsersService,
         {
           provide: getModelToken(User.name),
-          useValue: UsersModule
-        }
-      ]
+          useValue: UsersModule,
+        },
+      ],
     }).compile();
 
     controller = module.get<UsersController>(UsersController);
