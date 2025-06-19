@@ -30,4 +30,4 @@ jobs:
     if: github.ref == 'refs/heads/staging'
     uses: ./.github/workflows/perf-tests-linux.yml
     with:
-      testDirectory: ./test/performance/feedbacks.test.js
+      testFile: ./test/performance/feedbacks.test.js
