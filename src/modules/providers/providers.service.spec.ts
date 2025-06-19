@@ -3,8 +3,7 @@ import { ProvidersService } from './providers.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Provider } from './schemas/provider.schema';
 import { NotFoundException } from '@nestjs/common';
-import { CreateProviderDto } from './dto/create-provider.dto';
-import { UpdateProviderDto } from './dto/update-provider.dto';
+import { CreateProviderDto, UpdateProviderDto } from './dto/provider.dto';
 
 describe('ProvidersService', () => {
   let service: ProvidersService;

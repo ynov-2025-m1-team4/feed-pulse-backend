@@ -2,8 +2,11 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Feedback } from './schemas/feedback.schema';
 import { Model } from 'mongoose';
-import { CreateFeedbackDto } from './dto/create-feedback.dto';
-import { UpdateFeedbackDto } from './dto/update-feedback.dto';
+import {
+  CreateFeedbackDto,
+  FeedbackResponseDto,
+  UpdateFeedbackDto,
+} from './dto/feedbacks.dto';
 import { ChannelMetric } from '../metrics/interfaces/channel-metric.interface';
 import { ThemeMetric } from '../metrics/interfaces/theme-metric.interface';
 import { DailyRateMetric } from '../metrics/interfaces/daily-rate.interface';
@@ -27,12 +30,36 @@ export class FeedbacksService {
     return await this.model.create(dto);
   }
 
-  async findAllByUser(userId: string): Promise<Feedback[]> {
-    return this.model.find({ userId }).sort({ date: -1 }).exec();
+  async findAllByUser(userId: string): Promise<FeedbackResponseDto[]> {
+    return (await this.model.find({ userId }).sort({ date: -1 }).exec()).map(
+      (fb) => {
+        return {
+          userId,
+          providerId: fb.providerId.toString(),
+          date: fb.date,
+          channel: fb.channel,
+          text: fb.text,
+          sentimentScore: fb.sentimentScore,
+          themes: fb.themes,
+        };
+      },
+    );
   }
 
-  async findAllByProvider(providerId: string): Promise<Feedback[]> {
-    return this.model.find({ providerId }).sort({ date: -1 }).exec();
+  async findAllByProvider(providerId: string): Promise<FeedbackResponseDto[]> {
+    return (
+      await this.model.find({ providerId }).sort({ date: -1 }).exec()
+    ).map((fb) => {
+      return {
+        userId: fb.userId.toString(),
+        providerId: providerId,
+        date: fb.date,
+        channel: fb.channel,
+        text: fb.text,
+        sentimentScore: fb.sentimentScore,
+        themes: fb.themes,
+      };
+    });
   }
 
   async findOne(id: string): Promise<Feedback> {
@@ -56,8 +83,9 @@ export class FeedbacksService {
     return !!(await this.model.exists(filter));
   }
 
-  async getChannelMetrics(): Promise<ChannelMetric[]> {
+  async getChannelMetricsByUser(userId: string): Promise<ChannelMetric[]> {
     return await this.model.aggregate([
+      { $match: { userId } },
       {
         $group: {
           _id: '$channel',
@@ -74,8 +102,9 @@ export class FeedbacksService {
     ]);
   }
 
-  async getThemeMetrics(): Promise<ThemeMetric[]> {
+  async getThemeMetricsByUser(userId: string): Promise<ThemeMetric[]> {
     return await this.model.aggregate([
+      { $match: { userId } },
       { $unwind: '$themes' },
       {
         $group: {
@@ -93,8 +122,9 @@ export class FeedbacksService {
     ]);
   }
 
-  async getDailyRateMetric(): Promise<DailyRateMetric> {
+  async getDailyRateMetricByUser(userId: string): Promise<DailyRateMetric> {
     const result = await this.model.aggregate([
+      { $match: { userId } },
       {
         $group: {
           _id: { $dateToString: { format: '%Y-%m-%d', date: '$date' } },
@@ -112,8 +142,11 @@ export class FeedbacksService {
     return { rate: result.length ? result[0].rate : 0 };
   }
 
-  async getSentimentMetrics(): Promise<SentimentMetric> {
+  async getSentimentMetricsByUser(userId: string): Promise<SentimentMetric> {
+    const matchStage = { $match: { userId } };
+
     const avgResult = await this.model.aggregate([
+      matchStage,
       {
         $group: {
           _id: null,
@@ -123,6 +156,7 @@ export class FeedbacksService {
     ]);
 
     const distributionResult = await this.model.aggregate([
+      matchStage,
       {
         $project: {
           sentiment: {
@@ -148,15 +182,12 @@ export class FeedbacksService {
       },
     ]);
 
-    const totalCount = await this.model.countDocuments();
+    const totalCount = await this.model.countDocuments({ userId });
 
-    // Calculate critical rate (percentage of negative sentiments)
     const negativeCount =
       distributionResult.find((item) => item._id === 'negative')?.count || 0;
-
     const positiveCount =
       distributionResult.find((item) => item._id === 'positive')?.count || 0;
-
     const neutralCount =
       distributionResult.find((item) => item._id === 'neutral')?.count || 0;
 

@@ -4,7 +4,7 @@ import { ProvidersService } from '../providers/providers.service';
 import { FeedbacksService } from '../feedbacks/feedbacks.service';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { CreateFeedbackDto } from '../feedbacks/dto/create-feedback.dto';
+import { CreateFeedbackDto } from '../feedbacks/dto/feedbacks.dto';
 import { Provider } from '../providers/schemas/provider.schema';
 
 @Injectable()
