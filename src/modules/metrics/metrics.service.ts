@@ -9,19 +9,19 @@ import { FeedbacksService } from '../feedbacks/feedbacks.service';
 export class MetricsService {
   constructor(private feedbackService: FeedbacksService) {}
 
-  async getChannelMetrics(): Promise<ChannelMetric[]> {
-    return await this.feedbackService.getChannelMetrics();
+  async getChannelMetricsbyUser(userId: string): Promise<ChannelMetric[]> {
+    return await this.feedbackService.getChannelMetricsByUser(userId);
   }
 
-  async getThemeMetrics(): Promise<ThemeMetric[]> {
-    return await this.feedbackService.getThemeMetrics();
+  async getThemeMetricsbyUser(userId: string): Promise<ThemeMetric[]> {
+    return await this.feedbackService.getThemeMetricsByUser(userId);
   }
 
-  async getDailyRateMetric(): Promise<DailyRateMetric> {
-    return await this.feedbackService.getDailyRateMetric();
+  async getDailyRateMetricbyUser(userId: string): Promise<DailyRateMetric> {
+    return await this.feedbackService.getDailyRateMetricByUser(userId);
   }
 
-  async getSentimentMetrics(): Promise<SentimentMetric> {
-    return await this.feedbackService.getSentimentMetrics();
+  async getSentimentMetricsbyUser(userId: string): Promise<SentimentMetric> {
+    return await this.feedbackService.getSentimentMetricsByUser(userId);
   }
 }
