@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards, Request } from '@nestjs/common';
 import { MetricsService } from './metrics.service';
 import {
   ApiBearerAuth,
@@ -31,8 +31,8 @@ export class MetricsController {
       },
     },
   })
-  async getChannelMetrics() {
-    return this.metricsService.getChannelMetrics();
+  async getChannelMetrics(@Request() req) {
+    return this.metricsService.getChannelMetricsbyUser(String(req.user.userId));
   }
 
   @Get('themes')
@@ -51,8 +51,8 @@ export class MetricsController {
       },
     },
   })
-  async getThemeMetrics() {
-    return this.metricsService.getThemeMetrics();
+  async getThemeMetrics(@Request() req) {
+    return this.metricsService.getThemeMetricsbyUser(String(req.user.userId));
   }
 
   @Get('daily-rate')
@@ -67,8 +67,10 @@ export class MetricsController {
       },
     },
   })
-  async getDailyRate() {
-    return this.metricsService.getDailyRateMetric();
+  async getDailyRate(@Request() req) {
+    return this.metricsService.getDailyRateMetricbyUser(
+      String(req.user.userId),
+    );
   }
 
   @Get('sentiments')
@@ -92,7 +94,9 @@ export class MetricsController {
       },
     },
   })
-  async getSentimentMetric() {
-    return this.metricsService.getSentimentMetrics();
+  async getSentimentMetric(@Request() req) {
+    return this.metricsService.getSentimentMetricsbyUser(
+      String(req.user.userId),
+    );
   }
 }
