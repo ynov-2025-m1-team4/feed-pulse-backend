@@ -1,51 +1,85 @@
 import {
   Controller,
   Get,
+  Body,
   Param,
   Delete,
-  UseGuards,
+  Put,
   Request,
+  UseGuards,
 } from '@nestjs/common';
-import { FeedbacksService } from './feedbacks.service';
 import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBody,
+  ApiParam,
+  ApiBearerAuth,
+  ApiOkResponse,
+} from '@nestjs/swagger';
+import { FeedbacksService } from './feedbacks.service';
+import { FeedbackResponseDto, UpdateFeedbackDto } from './dto/feedbacks.dto';
 
+@ApiTags('Feedbacks')
+@ApiBearerAuth('accessToken')
 @Controller('feedbacks')
 export class FeedbacksController {
-  constructor(private readonly service: FeedbacksService) {}
+  constructor(private readonly feedbacksService: FeedbacksService) {}
 
-  // @Post()
-  // @UseGuards(AuthGuard('jwt'))
-  // create(@Body() dto: CreateFeedbackDto) {
-  //   return this.service.create(dto);
-  // }
-
-  @Get()
+  @Get('user')
+  @ApiOperation({ summary: 'Get all feedbacks by the current user' })
+  @ApiOkResponse({
+    description: 'List of feedbacks by user',
+    type: [FeedbackResponseDto],
+  })
   @UseGuards(AuthGuard('jwt'))
-  findAllByUser(@Request() req) {
-    return this.service.findAllByUser(req.user.userId as string);
+  async findAllByUser(@Request() req) {
+    return this.feedbacksService.findAllByUser(String(req.user.userId));
   }
 
   @Get('provider/:providerId')
+  @ApiOperation({ summary: 'Get all feedbacks for a provider' })
+  @ApiParam({ name: 'providerId', description: 'ID of the provider' })
+  @ApiOkResponse({
+    description: 'List of feedbacks for provider',
+    type: [FeedbackResponseDto],
+  })
   @UseGuards(AuthGuard('jwt'))
-  findAllByProvider(@Param('providerId') providerId: string) {
-    return this.service.findAllByProvider(providerId);
+  async findAllByProvider(@Param('providerId') providerId: string) {
+    return this.feedbacksService.findAllByProvider(providerId);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a feedback by ID' })
+  @ApiParam({ name: 'id', description: 'ID of the feedback' })
+  @ApiOkResponse({
+    description: 'Feedback found',
+    type: FeedbackResponseDto,
+  })
   @UseGuards(AuthGuard('jwt'))
-  findOne(@Param('id') id: string) {
-    return this.service.findOne(id);
+  async findOne(@Param('id') id: string) {
+    return this.feedbacksService.findOne(id);
   }
 
-  // @Patch(':id')
-  // @UseGuards(AuthGuard('jwt'))
-  // update(@Param('id') id: string, @Body() dto: UpdateFeedbackDto) {
-  //   return this.service.update(id, dto);
-  // }
+  @Put(':id')
+  @ApiOperation({ summary: 'Update a feedback by ID' })
+  @ApiParam({ name: 'id', description: 'ID of the feedback' })
+  @ApiBody({ type: UpdateFeedbackDto })
+  @ApiOkResponse({
+    description: 'Feedback updated',
+    type: FeedbackResponseDto,
+  })
+  @UseGuards(AuthGuard('jwt'))
+  async update(@Param('id') id: string, @Body() dto: UpdateFeedbackDto) {
+    return this.feedbacksService.update(id, dto);
+  }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a feedback by ID' })
+  @ApiParam({ name: 'id', description: 'ID of the feedback' })
+  @ApiOkResponse({ description: 'Feedback deleted' })
   @UseGuards(AuthGuard('jwt'))
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
+  async remove(@Param('id') id: string) {
+    return this.feedbacksService.remove(id);
   }
 }

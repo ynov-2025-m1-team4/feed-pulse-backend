@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProvidersService } from './providers.service';
-import { ProvidersController } from './providers.controller';
 import { getModelToken } from '@nestjs/mongoose';
 import { Provider } from './schemas/provider.schema';
 import { ProvidersModule } from './providers.module';
