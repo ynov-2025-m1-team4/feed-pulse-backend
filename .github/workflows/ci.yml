@@ -22,5 +22,12 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-      - name: Perf tests
-        run: npm run test:perf
+      - name: Run unit tests
+        run: npm run test:cov
+
+  perf-tests:
+    name: Run perf tests
+    if: github.ref == 'refs/heads/staging'
+    uses: ./.github/workflows/perf-tests-linux.yml
+    with:
+      testDirectory: ./test/performance/feedbacks.test.js
