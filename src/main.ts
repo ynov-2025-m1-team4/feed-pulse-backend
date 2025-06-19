@@ -35,6 +35,7 @@ async function bootstrap() {
       },
       'access-token',
     )
+    .addTag('FeedPulse')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/docs', app, document, { useGlobalPrefix: true });

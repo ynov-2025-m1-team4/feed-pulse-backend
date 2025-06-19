@@ -9,9 +9,9 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
+      - uses: grafana/setup-k6-action@v1
       - uses: actions/setup-node@v3
         with:
           node-version: '20'
@@ -22,7 +22,12 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-      - name: Run perf tests
-        uses: ./.github/workflows/perf-tests-linux.yml 
-        with:
-          testDirectory: ./test/performance/feedbacks.test.js
+      - name: Run unit tests
+        run: npm run test:cov
+
+  perf-tests:
+    name: Run perf tests
+    if: github.ref == 'refs/heads/staging'
+    uses: ./.github/workflows/perf-tests-linux.yml
+    with:
+      testFile: ./test/performance/feedbacks.test.js
