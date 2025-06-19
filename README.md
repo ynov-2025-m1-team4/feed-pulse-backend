@@ -135,7 +135,11 @@ npm run test:cov
 
 ## 📚 API Documentation
 
-- Swagger UI: [`/api/docs`](https://feed-pulse-backend.onrender.com/api/docs)
+- Swagger UI for backend: [`/api/docs`](https://feed-pulse-backend.onrender.com/api/docs)
+- Swagger UI for example producer: [`/api/docs`](https://feedback-producer.onrender.com/api/docs)
+
+You can access the API documentation for both the backend API and the example producer by visiting `/api/docs` on their respective URLs.
+
 - Auth: `/auth/register`, `/auth/login`
 - Providers: `/providers` (CRUD)
 - Feedbacks: `/feedbacks`, `/feedbacks/user`, `/feedbacks/provider/:providerId`, `/feedbacks/:id`
