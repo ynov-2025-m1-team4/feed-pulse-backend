@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
+import { APP_FILTER } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -17,6 +19,7 @@ import { PollingModule } from './modules/polling/polling.module';
 import { HttpModule } from '@nestjs/axios';
 import { MetricsModule } from './modules/metrics/metrics.module';
 import { AIModule } from './modules/ai/ai.module';
+import { SentryController } from './modules/sentry/sentry.controller';
 import aiConfig from './config/ai.config';
 
 @Module({
@@ -28,6 +31,7 @@ import aiConfig from './config/ai.config';
       load: [appConfig, jwtConfig, aiConfig],
       isGlobal: true,
     }),
+    SentryModule.forRoot(),
     // user can make 100 requests every 15 minutes.
     ThrottlerModule.forRoot({
       throttlers: [
@@ -53,9 +57,13 @@ import aiConfig from './config/ai.config';
     AIModule,
   ],
 
-  controllers: [AppController],
+  controllers: [AppController, SentryController],
   providers: [
     AppService,
+    {
+      provide: APP_FILTER,
+      useClass: SentryGlobalFilter,
+    },
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

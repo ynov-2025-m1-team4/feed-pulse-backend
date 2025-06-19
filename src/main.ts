@@ -4,7 +4,9 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { LogLevel, ValidationPipe, VersioningType } from '@nestjs/common';
 import helmet from 'helmet';
-import { AllExceptionsFilter } from './shared/all-exceptions.filter';
+
+import './instrument';
+import { SentryGlobalFilter } from '@sentry/nestjs/setup';
 
 async function bootstrap() {
   const appOptions = {
@@ -17,7 +19,7 @@ async function bootstrap() {
   app.use(helmet());
   app.setGlobalPrefix('api');
   app.enableVersioning({ type: VersioningType.URI });
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+  app.useGlobalFilters(new SentryGlobalFilter(httpAdapter));
   app.useGlobalPipes(new ValidationPipe());
 
   const options = new DocumentBuilder()
