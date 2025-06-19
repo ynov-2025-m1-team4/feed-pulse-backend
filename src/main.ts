@@ -33,7 +33,7 @@ async function bootstrap() {
         description: 'Enter JWT token',
         in: 'header',
       },
-      'access-token',
+      'accessToken',
     )
     .addTag('FeedPulse')
     .build();

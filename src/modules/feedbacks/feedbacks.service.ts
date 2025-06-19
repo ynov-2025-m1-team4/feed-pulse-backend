@@ -2,8 +2,11 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Feedback } from './schemas/feedback.schema';
 import { Model } from 'mongoose';
-import { CreateFeedbackDto } from './dto/create-feedback.dto';
-import { UpdateFeedbackDto } from './dto/update-feedback.dto';
+import {
+  CreateFeedbackDto,
+  FeedbackResponseDto,
+  UpdateFeedbackDto,
+} from './dto/feedbacks.dto';
 import { ChannelMetric } from '../metrics/interfaces/channel-metric.interface';
 import { ThemeMetric } from '../metrics/interfaces/theme-metric.interface';
 import { DailyRateMetric } from '../metrics/interfaces/daily-rate.interface';
@@ -27,12 +30,36 @@ export class FeedbacksService {
     return await this.model.create(dto);
   }
 
-  async findAllByUser(userId: string): Promise<Feedback[]> {
-    return this.model.find({ userId }).sort({ date: -1 }).exec();
+  async findAllByUser(userId: string): Promise<FeedbackResponseDto[]> {
+    return (await this.model.find({ userId }).sort({ date: -1 }).exec()).map(
+      (fb) => {
+        return {
+          userId,
+          providerId: fb.providerId.toString(),
+          date: fb.date,
+          channel: fb.channel,
+          text: fb.text,
+          sentimentScore: fb.sentimentScore,
+          themes: fb.themes,
+        };
+      },
+    );
   }
 
-  async findAllByProvider(providerId: string): Promise<Feedback[]> {
-    return this.model.find({ providerId }).sort({ date: -1 }).exec();
+  async findAllByProvider(providerId: string): Promise<FeedbackResponseDto[]> {
+    return (
+      await this.model.find({ providerId }).sort({ date: -1 }).exec()
+    ).map((fb) => {
+      return {
+        userId: fb.userId.toString(),
+        providerId: providerId,
+        date: fb.date,
+        channel: fb.channel,
+        text: fb.text,
+        sentimentScore: fb.sentimentScore,
+        themes: fb.themes,
+      };
+    });
   }
 
   async findOne(id: string): Promise<Feedback> {
